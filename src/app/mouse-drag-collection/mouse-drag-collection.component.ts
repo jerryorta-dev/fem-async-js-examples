@@ -1,4 +1,18 @@
-import { AfterContentInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostBinding,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { fromEvent } from 'rxjs/observable/fromEvent';
+import { map } from 'rxjs/operators/map';
+import { concatAll } from 'rxjs/operators/concatAll';
+import { takeUntil } from 'rxjs/operators/takeUntil';
 
 @Component({
              selector: 'app-mouse-drag-collection',
@@ -10,17 +24,32 @@ import { AfterContentInit, ChangeDetectionStrategy, Component, ElementRef, OnIni
            })
 export class MouseDragCollectionComponent implements AfterContentInit {
 
-  @ViewChild('dragTarget') dragTarget: ElementRef;
+  desc = 'https://frontendmasters.com/courses/asynchronous-javascript/implementing-mouse-move';
+  results: any = null;
 
-  constructor(private el: ElementRef) {
+  constructor(private cd: ChangeDetectorRef) {
   }
 
   ngAfterContentInit(): void {
-
+    this.dragObservables();
   }
 
-  getNativeElement(element) {
-    return element.nativeElement;
-  }
+  dragObservables(): void {
+    const target: any = document.querySelector('.app-mouse-drag-collection .drag-target');
 
+    const mouseDowns$: Observable<any> = fromEvent(target, 'mousedown');
+    const mouseUps$: Observable<any> = fromEvent(document, 'mouseup');
+    const mouseMoves$: Observable<any> = fromEvent(target, 'mousemove');
+
+    mouseDowns$
+      .pipe(
+        map(mouseDown => mouseMoves$.pipe(takeUntil(mouseUps$))),
+        concatAll()
+        )
+      .subscribe((r) => {
+        this.results = { offsetX: r.offsetX, offsetY: r.offsetY};
+        console.log(r);
+        this.cd.markForCheck();
+    });
+  }
 }
