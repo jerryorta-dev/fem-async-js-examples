@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 @Component({
              selector: 'app-mouse-drag-collection',
@@ -8,12 +8,19 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
              encapsulation: ViewEncapsulation.None,
              changeDetection: ChangeDetectionStrategy.OnPush,
            })
-export class MouseDragCollectionComponent implements OnInit {
+export class MouseDragCollectionComponent implements AfterContentInit {
 
-  constructor() {
+  @ViewChild('dragTarget') dragTarget: ElementRef;
+
+  constructor(private el: ElementRef) {
   }
 
-  ngOnInit() {
+  ngAfterContentInit(): void {
+
+  }
+
+  getNativeElement(element) {
+    return element.nativeElement;
   }
 
 }
