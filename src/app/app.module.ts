@@ -6,11 +6,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MouseDragCollectionComponent } from './examples/mouse-drag-collection/mouse-drag-collection.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MouseDragCollectionSwitchMapComponent } from './examples/mouse-drag-switch-map/mouse-drag-collection-switch-map.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MouseDragCollectionComponent
+    MouseDragCollectionComponent,
+    MouseDragCollectionSwitchMapComponent
   ],
   imports: [
     BrowserModule,

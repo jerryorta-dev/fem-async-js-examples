@@ -1,0 +1,19 @@
+.app-mouse-drag-collection-switch-map {
+  .mouse-drag-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .drag-target {
+      width: 400px;
+      height: 400px;
+      border: 1px solid #3a3a3a;
+      margin-right: 20px;
+    }
+
+    .drag-results {
+      width: 100%;
+      margin-left: 10px;
+    }
+  }
+}

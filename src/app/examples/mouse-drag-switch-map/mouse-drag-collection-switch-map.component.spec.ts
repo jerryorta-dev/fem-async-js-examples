@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MouseDragCollectionComponent } from './mouse-drag-collection.component';
+import { MouseDragCollectionSwitchMapComponent } from './mouse-drag-collection-switch-map.component';
 
 describe('MouseDragCollectionSwitchMapComponent', () => {
-  let component: MouseDragCollectionComponent;
-  let fixture: ComponentFixture<MouseDragCollectionComponent>;
+  let component: MouseDragCollectionSwitchMapComponent;
+  let fixture: ComponentFixture<MouseDragCollectionSwitchMapComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MouseDragCollectionComponent ]
+      declarations: [ MouseDragCollectionSwitchMapComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MouseDragCollectionComponent);
+    fixture = TestBed.createComponent(MouseDragCollectionSwitchMapComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

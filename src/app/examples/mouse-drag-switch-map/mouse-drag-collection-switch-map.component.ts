@@ -1,24 +1,23 @@
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { fromEvent } from 'rxjs/observable/fromEvent';
-import { concatAll } from 'rxjs/operators/concatAll';
-import { map } from 'rxjs/operators/map';
+import { switchMap } from 'rxjs/operators/switchMap';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 
 @Component({
-             selector: 'app-mouse-drag-collection',
-             templateUrl: './mouse-drag-collection.component.html',
-             styleUrls: [ './mouse-drag-collection.component.scss' ],
+             selector: 'app-mouse-drag-collection-switch-map',
+             templateUrl: './mouse-drag-collection-switch-map.component.html',
+             styleUrls: [ './mouse-drag-collection-switch-map.component.scss' ],
              preserveWhitespaces: false,
              encapsulation: ViewEncapsulation.None,
              changeDetection: ChangeDetectionStrategy.OnPush,
            })
-export class MouseDragCollectionComponent implements AfterContentInit {
+export class MouseDragCollectionSwitchMapComponent implements AfterContentInit {
 
   desc = 'https://frontendmasters.com/courses/asynchronous-javascript/implementing-mouse-move';
   results: any = null;
 
-  constructor(private cd: ChangeDetectorRef) {
+  constructor( private cd: ChangeDetectorRef ) {
   }
 
   ngAfterContentInit(): void {
@@ -26,7 +25,7 @@ export class MouseDragCollectionComponent implements AfterContentInit {
   }
 
   dragObservables(): void {
-    const target: any = document.querySelector('.app-mouse-drag-collection .drag-target');
+    const target: any = document.querySelector('.app-mouse-drag-collection-switch-map .drag-target');
 
     const mouseDowns$: Observable<any> = fromEvent(target, 'mousedown');
     const mouseUps$: Observable<any> = fromEvent(document, 'mouseup');
@@ -34,13 +33,17 @@ export class MouseDragCollectionComponent implements AfterContentInit {
 
     mouseDowns$
       .pipe(
-        map(mouseDown => mouseMoves$.pipe(takeUntil(mouseUps$))),
-        concatAll()
-        )
-      .subscribe((r) => {
-        this.results = { offsetX: r.offsetX, offsetY: r.offsetY};
+        switchMap(() => mouseMoves$.pipe(takeUntil(mouseUps$))),
+
+        // does not work
+        // mouseup is never caught
+        // switchMap(() => mouseMoves$),
+        // takeUntil(mouseUps$)
+      )
+      .subscribe(( r ) => {
+        this.results = { offsetX: r.offsetX, offsetY: r.offsetY };
         console.log(r);
         this.cd.markForCheck();
-    });
+      });
   }
 }
