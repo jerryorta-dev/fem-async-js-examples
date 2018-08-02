@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { switchMap } from 'rxjs/operators/switchMap';
 import { takeUntil } from 'rxjs/operators/takeUntil';
+import { getPosition } from '../../core';
 
 @Component({
              selector: 'app-mouse-drag-collection-switch-map',
@@ -26,10 +27,11 @@ export class MouseDragCollectionSwitchMapComponent implements AfterContentInit {
 
   dragObservables(): void {
     const target: any = document.querySelector('.app-mouse-drag-collection-switch-map .drag-target');
+    const canvas: any = document.querySelector('.app-mouse-drag-collection-switch-map .drag-canvas');
 
     const mouseDowns$: Observable<any> = fromEvent(target, 'mousedown');
+    const mouseMoves$: Observable<any> = fromEvent(canvas, 'mousemove');
     const mouseUps$: Observable<any> = fromEvent(document, 'mouseup');
-    const mouseMoves$: Observable<any> = fromEvent(target, 'mousemove');
 
     mouseDowns$
       .pipe(
@@ -40,10 +42,14 @@ export class MouseDragCollectionSwitchMapComponent implements AfterContentInit {
         // switchMap(() => mouseMoves$),
         // takeUntil(mouseUps$)
       )
-      .subscribe(( r ) => {
-        this.results = { offsetX: r.offsetX, offsetY: r.offsetY };
-        console.log(r);
-        this.cd.markForCheck();
+      .subscribe(( e ) => {
+        const canvasPosition: { x: number, y: number } = getPosition(canvas);
+
+        this.results = { x: e.clientX - canvasPosition.x, y: e.clientY - canvasPosition.y };
+        target.style.position = 'absolute';
+        target.style.left = `${this.results.x}px`;
+        target.style.top = `${this.results.y}px`;
+
       });
   }
 }

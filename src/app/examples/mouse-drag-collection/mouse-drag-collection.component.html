@@ -2,7 +2,9 @@
   <h3>Drag in the square</h3>
   <div class="pad-bottom-20"><a [href]="desc" target="_blank">{{desc}}</a></div>
   <div class="mouse-drag-layout">
-    <div id="drag-target" class="drag-target" #dragTarget></div>
+    <div class="drag-canvas" #dragTarget>
+      <div class="drag-target"></div>
+    </div>
     <div class="drag-results">
       {{ results | json}}
     </div>

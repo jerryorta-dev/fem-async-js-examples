@@ -4,6 +4,7 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 import { concatAll } from 'rxjs/operators/concatAll';
 import { map } from 'rxjs/operators/map';
 import { takeUntil } from 'rxjs/operators/takeUntil';
+import { getPosition } from '../../core';
 
 @Component({
              selector: 'app-mouse-drag-collection',
@@ -18,7 +19,7 @@ export class MouseDragCollectionComponent implements AfterContentInit {
   desc = 'https://frontendmasters.com/courses/asynchronous-javascript/implementing-mouse-move';
   results: any = null;
 
-  constructor(private cd: ChangeDetectorRef) {
+  constructor( private cd: ChangeDetectorRef ) {
   }
 
   ngAfterContentInit(): void {
@@ -27,20 +28,24 @@ export class MouseDragCollectionComponent implements AfterContentInit {
 
   dragObservables(): void {
     const target: any = document.querySelector('.app-mouse-drag-collection .drag-target');
+    const canvas: any = document.querySelector('.app-mouse-drag-collection .drag-canvas');
 
     const mouseDowns$: Observable<any> = fromEvent(target, 'mousedown');
+    const mouseMoves$: Observable<any> = fromEvent(canvas, 'mousemove');
     const mouseUps$: Observable<any> = fromEvent(document, 'mouseup');
-    const mouseMoves$: Observable<any> = fromEvent(target, 'mousemove');
 
     mouseDowns$
       .pipe(
         map(mouseDown => mouseMoves$.pipe(takeUntil(mouseUps$))),
-        concatAll()
-        )
-      .subscribe((r) => {
-        this.results = { offsetX: r.offsetX, offsetY: r.offsetY};
-        console.log(r);
-        this.cd.markForCheck();
-    });
+        concatAll(),
+      )
+      .subscribe(( e ) => {
+        const canvasPosition: { x: number, y: number } = getPosition(canvas);
+
+        this.results = { x: e.clientX - canvasPosition.x, y: e.clientY - canvasPosition.y };
+        target.style.position = 'absolute';
+        target.style.left = `${this.results.x}px`;
+        target.style.top = `${this.results.y}px`;
+      });
   }
 }
