@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MouseDragCollectionComponent } from './mouse-drag-collection/mouse-drag-collection.component';
+import { MouseDragCollectionComponent } from './examples/mouse-drag-collection/mouse-drag-collection.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
